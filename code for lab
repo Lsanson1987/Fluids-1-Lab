@@ -1,0 +1,32 @@
+const int targetPin = 7;   // Pin to control
+String pinState = "INPUT"; // Track current pin mode
+
+
+void setup() {
+  Serial.begin(9600);          // Start Serial communication
+  pinMode(targetPin, INPUT);   // Start as input
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');  // Read until newline
+
+    command.trim();  // Remove any leading/trailing whitespace
+
+    if (command.equalsIgnoreCase("output")) {
+      pinMode(targetPin, OUTPUT);     // Change to output
+      digitalWrite(targetPin, LOW);   // Set LOW
+      pinState = "OUTPUT LOW";
+      Serial.println("Pin 7 set to OUTPUT and driven LOW.");
+    } else if (command.equalsIgnoreCase("input")) {
+      pinMode(targetPin, INPUT);
+      pinState = "INPUT";
+      Serial.println("set to input");
+    } else if (command.equalsIgnoreCase("status")) {
+      Serial.print("Current pin mode: ");
+      Serial.println(pinState);
+    } else {
+      Serial.println("Unknown command. Type 'output', 'input', or 'status'.");
+    }
+  }
+}
